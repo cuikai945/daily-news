@@ -1,0 +1,37 @@
+name: 每日自动抓取新闻
+
+on:
+  schedule:
+    - cron: '0 22 * * *' # 相当于每天早上6点 (北京时间) 自动运行
+  workflow_dispatch: # 允许你随时手动点击按钮运行
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 获取代码库
+        uses: actions/checkout@v3
+
+      - name: 准备 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖包
+        run: pip install feedparser zhipuai
+
+      - name: 运行 AI 读报机器人
+        env:
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+        run: python news_bot.py
+
+      - name: 自动保存生成的数据文件
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add news_data.js
+          git commit -m "🤖 AI 自动更新今日新闻" || echo "今天的新闻没有变化"
+          git push
