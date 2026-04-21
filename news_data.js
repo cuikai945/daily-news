@@ -2,7 +2,7 @@ const newsData = [
     {
         "id": 1,
         "title": "美国稀土公司28亿美元收购巴西生产商",
-        "summary": "AI总结：美国稀土公司以28亿美元收购巴西生产商，旨在建立涵盖重稀土和轻稀土供应链的合并实体。",
+        "summary": "AI总结：美国稀土公司以28亿美元收购巴西稀土生产商，旨在打造完整的稀土供应链实体。",
         "source": "FT中文网",
         "region": "美国",
         "type": "财经",
@@ -13,7 +13,7 @@ const newsData = [
     {
         "id": 2,
         "title": "法德提议给予乌克兰“象征性”欧盟成员国利益",
-        "summary": "AI总结：法德提议在乌克兰入盟前给予象征性欧盟成员国利益，但不含农业补贴和投票权，与乌方快速加入欧盟的期望不符。",
+        "summary": "AI总结：法国和德国提议在乌克兰正式加入欧盟之前，给予其象征性的成员国利益，但不含农业补贴和投票权，与乌克兰期望快速加入欧盟的目标不符。",
         "source": "FT中文网",
         "region": "欧洲",
         "type": "政治",
@@ -24,7 +24,7 @@ const newsData = [
     {
         "id": 3,
         "title": "外国车企拥抱中国技术以保持竞争力",
-        "summary": "AI总结：西方车企采用“在中国，为中国”策略，以应对在华销量下滑，保持其在全球最大汽车市场的竞争力。",
+        "summary": "AI总结：西方车企在中国市场采用本土技术策略以应对销量下滑，力图保持竞争力。",
         "source": "FT中文网",
         "region": "中国",
         "type": "财经",
@@ -35,7 +35,7 @@ const newsData = [
     {
         "id": 4,
         "title": "特朗普：美国海军扣押违反封锁令的伊朗船只",
-        "summary": "AI总结：美国海军扣押违反封锁令的伊朗船只，美伊双方对和平谈判说法不一，油价上涨。",
+        "summary": "AI总结：美国海军扣押一艘违反封锁令的伊朗船只，美伊双方就和平谈判存在分歧，导致油价上涨。",
         "source": "FT中文网",
         "region": "美国",
         "type": "政治",
@@ -46,7 +46,7 @@ const newsData = [
     {
         "id": 5,
         "title": "特朗普：美国将与伊朗举行新一轮谈判",
-        "summary": "AI总结：特朗普宣布美国将与伊朗举行新一轮谈判，同时威胁重启轰炸行动，引发战争罪担忧。",
+        "summary": "AI总结：特朗普宣布美国将与伊朗进行新一轮谈判，同时威胁重启轰炸行动，引发战争罪担忧。",
         "source": "FT中文网",
         "region": "美国",
         "type": "政治",
@@ -57,7 +57,7 @@ const newsData = [
     {
         "id": 6,
         "title": "美商务部长称加拿大“太糟糕”",
-        "summary": "AI总结：美国商务部长卢特尼克对加拿大拖延与美国贸易谈判表示不满，认为这是最糟糕的策略，加拿大抵制导致美国每月损失逾10亿美元贸易额。",
+        "summary": "AI总结：美国商务部长批评加拿大拖延贸易谈判策略，称其‘最糟糕’，指其抵制导致美损失逾10亿美元贸易额。",
         "source": "FT中文网",
         "region": "美国",
         "type": "财经",
@@ -68,9 +68,9 @@ const newsData = [
     {
         "id": 7,
         "title": "英国投资者悄然投资字节跳动",
-        "summary": "AI总结：科技行业投资者布莱克福德投资字节跳动，持股价值超5亿美元，认为其被低估。",
+        "summary": "AI总结：科技行业投资者布莱克福德在字节跳动投资超过5亿美元，认为其被低估。",
         "source": "FT中文网",
-        "region": "欧洲",
+        "region": "中国",
         "type": "财经",
         "url": "https://www.ftchinese.com/story/001109482",
         "isImportant": false,
@@ -90,10 +90,10 @@ const newsData = [
     {
         "id": 9,
         "title": "备战中期选举 美国AI行业掷重金支持候选人",
-        "summary": "AI总结：美国加密货币和AI行业在过去一年捐赠约2.5亿美元，支持中期选举国会候选人。",
+        "summary": "AI总结：美国AI行业在过去一年投入2.5亿美元支持中期选举候选人，以影响政策走向。",
         "source": "FT中文网",
         "region": "美国",
-        "type": "财经",
+        "type": "政治",
         "url": "https://www.ftchinese.com/story/001109477",
         "isImportant": false,
         "keyword": ""
@@ -101,7 +101,7 @@ const newsData = [
     {
         "id": 10,
         "title": "俄罗斯对乌克兰发起今年最大规模空袭",
-        "summary": "AI总结：俄罗斯在复活节短暂停火后对乌克兰发起今年最大规模空袭，和平谈判停滞。",
+        "summary": "AI总结：俄罗斯对乌克兰发起今年最大规模空袭，发生在复活节短暂停火后，和平谈判停滞。",
         "source": "FT中文网",
         "region": "欧洲",
         "type": "政治",
@@ -112,7 +112,7 @@ const newsData = [
     {
         "id": 11,
         "title": "Trump says US will not lift Hormuz blockade until deal made with Iran",
-        "summary": "AI总结：特朗普表示，美国不会解除霍尔木兹海峡封锁，除非与伊朗达成协议。这一言论发生在伊朗是否将参加本周在巴基斯坦举行的和平谈判的不确定性之际。",
+        "summary": "AI总结：特朗普表示，除非与伊朗达成协议，否则美国将不会解除霍尔木兹海峡的封锁。",
         "source": "BBC国际",
         "region": "美国",
         "type": "政治",
@@ -123,7 +123,7 @@ const newsData = [
     {
         "id": 12,
         "title": "Zelensky says failure of US envoys to visit Kyiv is 'disrespectful'",
-        "summary": "AI总结：乌克兰总统泽连斯基表示，美国使者史蒂夫·威特科夫和唐纳德·特朗普的女婿贾里德·库什纳多次访问莫斯科，却从未访问基辅，这显得‘不尊重’。",
+        "summary": "AI总结：乌克兰总统泽连斯基表示，美国特使史蒂夫·维特科夫和唐纳德·特朗普的女婿贾里德·库什纳多次访问莫斯科，但从未访问基辅，这是不尊重的表现。",
         "source": "BBC国际",
         "region": "欧洲",
         "type": "政治",
@@ -134,10 +134,10 @@ const newsData = [
     {
         "id": 13,
         "title": "Japan loosens arms export rules in break from post-WW2 pacifism",
-        "summary": "AI总结：日本放宽武器出口规定，结束二战后和平主义立场，为向十几个国家出售武器铺路。",
+        "summary": "AI总结：日本放宽武器出口规则，打破战后和平主义立场，为向十多个国家出售武器铺平道路。",
         "source": "BBC国际",
         "region": "其他",
-        "type": "政治",
+        "type": "政策",
         "url": "https://www.bbc.com/news/articles/clyx4vlqy4vo?at_medium=RSS&at_campaign=rss",
         "isImportant": false,
         "keyword": ""
@@ -145,7 +145,7 @@ const newsData = [
     {
         "id": 14,
         "title": "Role of US officials killed in crash in Mexico under scrutiny",
-        "summary": "AI总结：两名美国官员在墨西哥参与捣毁秘密毒品实验室的行动中遭遇车祸身亡。",
+        "summary": "AI总结：两名美国官员在墨西哥一次秘密毒品实验室破坏行动后发生的车祸中丧生，其角色受到审查。",
         "source": "BBC国际",
         "region": "美国",
         "type": "政治",
@@ -156,7 +156,7 @@ const newsData = [
     {
         "id": 15,
         "title": "How will Apple change under 'product guy' John Ternus?",
-        "summary": "AI总结：随着蒂姆·库克宣布辞去苹果公司最高职位，新任老板约翰·特纳斯面临的关键挑战。",
+        "summary": "AI总结：随着蒂姆·库克宣布辞去苹果公司首席执行官职位，新任CEO约翰·特纳斯面临的主要挑战是什么？",
         "source": "BBC国际",
         "region": "美国",
         "type": "科技",
@@ -167,7 +167,7 @@ const newsData = [
     {
         "id": 16,
         "title": "Madonna offers reward for return of missing Coachella costume",
-        "summary": "AI总结：麦当娜悬赏找回失踪的科切拉音乐节服装，称其为‘我历史的一部分’",
+        "summary": "AI总结：麦当娜悬赏找回在Coachella音乐节期间丢失的服装，称其是‘我的历史的一部分’。",
         "source": "BBC国际",
         "region": "美国",
         "type": "财经",
@@ -178,7 +178,7 @@ const newsData = [
     {
         "id": 17,
         "title": "Ofcom investigating Telegram over child sexual abuse material concerns",
-        "summary": "AI总结：英国通信管理局（Ofcom）正在调查Telegram涉嫌传播儿童性虐待材料的问题，Telegram对此表示“坚决否认”Ofcom的指控。",
+        "summary": "AI总结：英国监管机构Ofcom正在调查Telegram是否涉嫌传播儿童性剥削材料，Telegram对此予以否认。",
         "source": "BBC国际",
         "region": "欧洲",
         "type": "科技",
@@ -189,7 +189,7 @@ const newsData = [
     {
         "id": 18,
         "title": "Canadian killed in shooting at Mexico's ancient Teotihuacán pyramids",
-        "summary": "AI总结：墨西哥特奥蒂瓦坎金字塔发生枪击事件，加拿大人死亡，多人受伤。",
+        "summary": "AI总结：墨西哥官方称，在墨西哥特奥蒂瓦坎金字塔的射击事件中，一名加拿大人死亡，多人受伤。该事件发生在大流行前的旅游胜地，距离该国举办FIFA世界杯仅几周。",
         "source": "BBC国际",
         "region": "其他",
         "type": "宏观",
@@ -200,7 +200,7 @@ const newsData = [
     {
         "id": 19,
         "title": "South Africa's police boss charged in connection with controversial health contract",
-        "summary": "AI总结：南非警察局长因涉嫌与争议性健康合同相关的问题被起诉，被控未能履行职责提供适当的监督。",
+        "summary": "AI总结：南非警察局长因涉嫌与争议性健康合同监管不力而被起诉。",
         "source": "BBC国际",
         "region": "其他",
         "type": "政治",
@@ -211,10 +211,10 @@ const newsData = [
     {
         "id": 20,
         "title": "The Onion launches new effort to turn Infowars into parody website",
-        "summary": "AI总结：洋葱报提出一项新计划，旨在将Infowars转变为一个讽刺网站，该计划涉及许可Alex Jones的公司，该公司面临清算。",
+        "summary": "AI总结：洋葱报计划将Infowars转变为讽刺网站，涉及许可Alex Jones公司出版，该公司面临清算。",
         "source": "BBC国际",
         "region": "美国",
-        "type": "科技",
+        "type": "政治",
         "url": "https://www.bbc.com/news/articles/ckgr7dw55lwo?at_medium=RSS&at_campaign=rss",
         "isImportant": false,
         "keyword": ""
