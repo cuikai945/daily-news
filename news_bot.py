@@ -4,6 +4,7 @@ import os
 import requests
 from zhipuai import ZhipuAI
 
+# 设置 8 大平台源 (包含联合早报)
 FEEDS = {
     'FT中文网': 'http://www.ftchinese.com/rss/news',
     'BBC': 'http://feeds.bbci.co.uk/zhongwen/simp/rss.xml',
@@ -15,15 +16,16 @@ FEEDS = {
     '联合早报': 'https://www.zaobao.com/realtime/china/rss'
 }
 
+# 配置智谱 AI (需在 GitHub Secrets 中配置 ZHIPU_API_KEY)
 api_key = os.environ.get("ZHIPU_API_KEY")
 client = ZhipuAI(api_key=api_key) if api_key else None
 
 def summarize_with_ai(text):
     if not client:
-        return text[:150] + "..." 
+        return text[:150] + "..." # 如果没有配置 API，则截取前 150 字
     try:
         response = client.chat.completions.create(
-            model="glm-4",
+            model="glm-4",  
             messages=[
                 {"role": "system", "content": "你是一个资深政经新闻编辑。"},
                 {"role": "user", "content": f"请将以下新闻内容总结为300字左右的深度提炼，客观、简练、直击要害：\n{text}"}
@@ -36,19 +38,23 @@ def summarize_with_ai(text):
 
 all_news = []
 
-# 💡 破解核心：伪装成真实的 Windows 电脑 Chrome 浏览器
+# 💡 更强大的伪装面具：告诉新闻网站“我是真实的 Windows 电脑 Chrome 浏览器，不是机器人”
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Connection': 'keep-alive'
 }
 
 for source, url in FEEDS.items():
     print(f"正在抓取 {source}...")
     try:
-        # 先用带有伪装面具的 requests 去敲门
+        # 用伪装面具发送请求
         res = requests.get(url, headers=headers, timeout=15)
-        # 拿到数据后再交给 feedparser 处理
+        # 用 feedparser 解析拿回来的真实数据
         feed = feedparser.parse(res.content)
         
+        # 强制 Top 10 数量控制
         for entry in feed.entries[:10]:
             raw_summary = entry.get('summary', '') or entry.get('description', '')
             ai_summary = summarize_with_ai(raw_summary)
@@ -62,6 +68,7 @@ for source, url in FEEDS.items():
     except Exception as e:
         print(f"{source} 抓取失败: {e}")
 
+# 生成前端所需的 JS 文件
 with open('news_data.js', 'w', encoding='utf-8') as f:
     f.write(f"const newsData = {json.dumps(all_news, ensure_ascii=False, indent=4)};")
 
