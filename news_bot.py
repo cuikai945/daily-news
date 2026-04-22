@@ -2,9 +2,9 @@ import feedparser
 import json
 import os
 import requests
-import google.generativeai as genai
+from zhipuai import ZhipuAI
 
-# 设置 8 大平台源 (已替换为联合早报)
+# 设置 8 大平台源 (包含联合早报)
 FEEDS = {
     'FT中文网': 'http://www.ftchinese.com/rss/news',
     'BBC': 'http://feeds.bbci.co.uk/zhongwen/simp/rss.xml',
@@ -16,20 +16,24 @@ FEEDS = {
     '联合早报': 'https://www.zaobao.com/realtime/china/rss'
 }
 
-# 配置 Gemini API (需在 GitHub Secrets 中配置 GEMINI_API_KEY)
-api_key = os.environ.get("GEMINI_API_KEY")
-if api_key:
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-pro')
+# 配置智谱 AI (需在 GitHub Secrets 中配置 ZHIPU_API_KEY)
+api_key = os.environ.get("ZHIPU_API_KEY")
+client = ZhipuAI(api_key=api_key) if api_key else None
 
 def summarize_with_ai(text):
-    if not api_key:
+    if not client:
         return text[:150] + "..." # 如果没有配置 API，则截取前 150 字
     try:
-        prompt = f"请作为资深新闻编辑，将以下新闻内容总结为300字左右的深度提炼，客观简练：\n{text}"
-        response = model.generate_content(prompt)
-        return response.text.replace('\n', '')
+        response = client.chat.completions.create(
+            model="glm-4",  # 调用智谱最新的 GLM-4 模型
+            messages=[
+                {"role": "system", "content": "你是一个资深政经新闻编辑。"},
+                {"role": "user", "content": f"请将以下新闻内容总结为300字左右的深度提炼，客观、简练、直击要害：\n{text}"}
+            ],
+        )
+        return response.choices[0].message.content.replace('\n', '')
     except Exception as e:
+        print(f"AI 总结失败: {e}")
         return text[:150] + "..."
 
 all_news = []
