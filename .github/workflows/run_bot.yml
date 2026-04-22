@@ -17,8 +17,8 @@ jobs:
       with:
         python-version: '3.10'
         
-    - name: 安装依赖包 (强制直接安装全家桶)
-      run: pip install feedparser requests zhipuai sniffio httpx pydantic
+    - name: 安装依赖包
+      run: pip install -r requirements.txt
       
     - name: 运行 智谱AI 读报机器人
       env:
