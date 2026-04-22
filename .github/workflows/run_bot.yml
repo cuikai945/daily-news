@@ -2,7 +2,7 @@ name: 每日自动抓取新闻
 
 on:
   schedule:
-    - cron: '0 0,12 * * *' 
+    - cron: '0 23,6 * * *' 
   workflow_dispatch: 
 
 jobs:
@@ -25,10 +25,11 @@ jobs:
         ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
       run: python news_bot.py
       
-    - name: 自动保存并发布
+    - name: 自动保存并发布 (包含防冲突机制)
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         git add news_data.js
         git diff --quiet && git diff --staged --quiet || git commit -m "🤖 智谱AI 自动更新今日新闻"
+        git pull --rebase origin main
         git push
