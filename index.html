@@ -22,16 +22,17 @@
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         .summary-text { line-height: 1.8; letter-spacing: 0.02em; text-align: justify; }
         
-        /* 手机端隐藏滚动条，保留触摸滑动功能 */
+        /* 默认隐藏滚动条（适配手机） */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 💡 破解核心：针对电脑屏幕(宽度大于768px)，显示一条优雅的极细滚动条 */
+        /* 电脑端强制显示精美滚动条 */
         @media (min-width: 768px) {
-            .no-scrollbar::-webkit-scrollbar { display: block; height: 6px; }
-            .no-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+            .no-scrollbar::-webkit-scrollbar { display: block !important; height: 8px !important; }
+            .no-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+            .no-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
             .no-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-            .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            .no-scrollbar { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9; }
         }
     </style>
 </head>
