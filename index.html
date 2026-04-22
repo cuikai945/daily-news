@@ -22,9 +22,17 @@
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         .summary-text { line-height: 1.8; letter-spacing: 0.02em; text-align: justify; }
         
-        /* 隐藏横向滚动条，保留滑动功能 */
+        /* 手机端隐藏滚动条，保留触摸滑动功能 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* 💡 破解核心：针对电脑屏幕(宽度大于768px)，显示一条优雅的极细滚动条 */
+        @media (min-width: 768px) {
+            .no-scrollbar::-webkit-scrollbar { display: block; height: 6px; }
+            .no-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+            .no-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+            .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-20">
