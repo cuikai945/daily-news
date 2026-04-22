@@ -9,7 +9,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="政经简报">
-    <link rel="apple-touch-icon" href="./logo.png"> <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="apple-touch-icon" href="./logo.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600&display=swap');
         body { font-family: 'Inter', 'Noto Serif SC', serif; -webkit-tap-highlight-color: transparent; }
@@ -18,8 +20,11 @@
         .active-tab { background-color: #334155 !important; color: white !important; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
         .hot-badge { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-        /* 针对 300-500 字的深度总结排版优化 */
         .summary-text { line-height: 1.8; letter-spacing: 0.02em; text-align: justify; }
+        
+        /* 隐藏横向滚动条，保留滑动功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-20">
@@ -40,7 +45,7 @@
             <button onclick="filterNews('36氪')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">36氪</button>
             <button onclick="filterNews('雅虎财经')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">雅虎财经</button>
             <button onclick="filterNews('CNBC')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">CNBC</button>
-            <button onclick="filterNews('人民日报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">人民日报</button>
+            <button onclick="filterNews('联合早报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">联合早报</button>
         </div>
 
         <div id="news-container" class="space-y-6">
@@ -61,7 +66,7 @@
         function renderNews(filter = 'all') {
             const container = document.getElementById('news-container');
             if (typeof newsData === 'undefined') {
-                container.innerHTML = '<div class="text-center py-20 text-slate-400">数据加载中，请稍后刷新...</div>';
+                container.innerHTML = '<div class="text-center py-20 text-slate-400">正在抓取今日新闻，请稍后刷新...</div>';
                 return;
             }
 
@@ -77,9 +82,8 @@
                     ${index < 3 && filter !== 'all' ? '<span class="hot-badge absolute -top-2 -left-2 text-[10px] text-white px-2 py-0.5 rounded-lg font-bold shadow-sm">TOP热点</span>' : ''}
                     <div class="flex justify-between items-start mb-3">
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">${item.source}</span>
-                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-md">${item.time || '今日'}</span>
                     </div>
-                    <h2 class="text-xl font-bold text-slate-800 mb-4 leading-snug">${item.title}</h2>
+                    <h2 class="text-xl font-bold text-slate-800 mb-4 leading-snug"><a href="${item.link}" target="_blank">${item.title}</a></h2>
                     <div class="bg-slate-50 rounded-xl p-4 border-l-2 border-slate-200">
                         <p class="text-slate-600 text-[15px] summary-text leading-relaxed">
                             <span class="font-bold text-slate-400 mr-1 text-xs italic">深度总结:</span>
