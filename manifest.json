@@ -1,17 +1,21 @@
 {
-"name": "今日政经简报",
-"short_name": "政经简报",
-"start_url": "./index.html",
-"display": "standalone",
-"background_color": "#f5f5f7",
-"theme_color": "#f5f5f7",
-"description": "全自动全球政经情报聚合终端",
-"icons": [
-{
-"src": "https://cdn-icons-png.flaticon.com/512/2965/2965879.png",
-"sizes": "512x512",
-"type": "image/png",
-"purpose": "any maskable"
-}
-]
+  "name": "今日政经简报",
+  "short_name": "政经简报",
+  "description": "每日二次自动抓取全球顶尖媒体简报",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

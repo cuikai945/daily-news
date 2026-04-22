@@ -5,276 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>今日政经简报</title>
     
-    <!-- ================= 魔法印章：PWA 核心配置 ================= -->
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#f7f9fc">
-    <!-- iOS 苹果专属桌面配置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="政经简报">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2965/2965879.png">
-    <!-- ========================================================== -->
-
+    <link rel="apple-touch-icon" href="./logo.png"> <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #f7f9fc;
-            --text-main: #2c3e50;
-            --text-second: #7f8c8d;
-            --card-bg: #ffffff;
-            --tag-bg: #fffcf0; 
-            --tag-text: #b89824;
-            --tag-border: #f0e6c2;
-            --highlight-bg: #fff0f2;
-            --highlight-text: #d9534f;
-            --color-us: #7fb3d5;    
-        }
-        
-        body {
-            font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 35px 20px;
-            display: flex;
-            justify-content: center;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        .container { max-width: 800px; width: 100%; }
-        header { margin-bottom: 25px; text-align: center; }
-        
-        h1 { 
-            font-size: 34px; margin: 0 0 10px 0; font-weight: 800; letter-spacing: 1px;
-            background: linear-gradient(135deg, #2c3e50, #54728f);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .date { color: var(--text-second); font-size: 14px; font-weight: 500; }
-        
-        /* 追踪模块 */
-        .tracker-module {
-            background: #ffffff; border-radius: 20px; padding: 20px 24px; margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #e1e8ed;
-        }
-        .tracker-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
-        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tracker-input {
-            flex: 1; padding: 10px 16px; border-radius: 12px; border: 1px solid #dcdfe6;
-            font-size: 14px; outline: none; transition: border 0.2s;
-        }
-        .tracker-input:focus { border-color: var(--color-us); }
-        .tracker-btn {
-            background: var(--color-us); color: white; border: none; padding: 0 20px;
-            border-radius: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-        }
-        .active-keywords { display: flex; gap: 8px; flex-wrap: wrap; }
-        .user-tag {
-            background: #f0f4f8; color: var(--color-us); padding: 4px 12px; border-radius: 12px;
-            font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px;
-        }
-        .user-tag span { cursor: pointer; color: #a0b2c0; font-weight: bold; }
-        .tracker-hint { font-size: 12px; color: #aeb6bf; margin-top: 10px; text-align: right; }
-
-        /* 平台分类标签 */
-        .tabs { 
-            display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; 
-            padding: 5px 5px 15px 5px; justify-content: flex-start; 
-        }
-        /* 隐藏滚动条但保留滚动功能 */
-        .tabs::-webkit-scrollbar { display: none; }
-        .tabs { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .tab { 
-            padding: 8px 18px; border-radius: 20px; background: #ffffff; color: var(--text-second);
-            font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: 1px solid #e1e8ed;
-            white-space: nowrap; flex-shrink: 0;
-        }
-        .tab.active { background: #34495e; color: white; border-color: #34495e; box-shadow: 0 4px 10px rgba(52,73,94,0.2); }
-
-        .news-list { display: flex; flex-direction: column; gap: 24px; }
-        .card {
-            background: var(--card-bg); border-radius: 20px; padding: 28px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04); text-decoration: none; color: inherit;
-            display: block; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        .card.important::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
-            background-color: var(--highlight-text); border-radius: 20px 0 0 20px;
-        }
-        .keyword-badge { 
-            background: var(--highlight-bg); color: var(--highlight-text); padding: 4px 10px; 
-            border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 8px; 
-        }
-        .hot-badge {
-            background: #ff4757; color: white; padding: 4px 8px; border-radius: 8px;
-            font-size: 11px; font-weight: bold; margin-right: 8px; display: inline-flex; align-items: center;
-        }
-        
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .source { font-weight: 700; font-size: 13px; color: #7f8c8d; text-transform: uppercase; }
-        .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tag { 
-            background: var(--tag-bg); color: var(--tag-text); border: 1px solid var(--tag-border);
-            padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; 
-        }
-        .title { font-size: 20px; font-weight: 700; margin: 0 0 12px 0; line-height: 1.5; color: var(--text-main); }
-        .summary { font-size: 15.5px; color: #4a5568; line-height: 1.8; margin: 0; text-align: justify; letter-spacing: 0.3px; }
-        .status-box { background:#ffffff; border: 1px solid #e1e8ed; padding: 40px; border-radius: 20px; text-align: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600&display=swap');
+        body { font-family: 'Inter', 'Noto Serif SC', serif; -webkit-tap-highlight-color: transparent; }
+        .news-card { transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .news-card:active { transform: scale(0.98); background-color: #f1f5f9; }
+        .active-tab { background-color: #334155 !important; color: white !important; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .hot-badge { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        /* 针对 300-500 字的深度总结排版优化 */
+        .summary-text { line-height: 1.8; letter-spacing: 0.02em; text-align: justify; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>今日政经简报</h1>
-            <div class="date" id="currentDate"></div>
-        </header>
+<body class="bg-slate-50 min-h-screen pb-20">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 py-6 border-b border-slate-200 shadow-sm">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">今日政经简报</h1>
+            <p id="current-date" class="text-slate-500 mt-2 font-medium"></p>
+        </div>
+    </header>
 
-        <div class="tracker-module">
-            <div class="tracker-title">🎯 实时页面追踪</div>
-            <div class="input-group">
-                <input type="text" id="keywordInput" class="tracker-input" placeholder="输入当前想高亮的词，例如：科技，降息..." autocomplete="off">
-                <button id="addKeywordBtn" class="tracker-btn">添加</button>
+    <main class="max-w-3xl mx-auto px-4 mt-8">
+        <div class="flex overflow-x-auto space-x-2 pb-4 no-scrollbar mb-8 sticky top-[88px] bg-slate-50/95 backdrop-blur-sm py-2 z-40">
+            <button onclick="filterNews('all')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap active-tab">全部</button>
+            <button onclick="filterNews('FT中文网')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">FT中文网</button>
+            <button onclick="filterNews('BBC')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">BBC</button>
+            <button onclick="filterNews('纽约时报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">纽约时报</button>
+            <button onclick="filterNews('华尔街日报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">华尔街日报</button>
+            <button onclick="filterNews('36氪')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">36氪</button>
+            <button onclick="filterNews('雅虎财经')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">雅虎财经</button>
+            <button onclick="filterNews('CNBC')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">CNBC</button>
+            <button onclick="filterNews('人民日报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">人民日报</button>
+        </div>
+
+        <div id="news-container" class="space-y-6">
+            <div class="flex justify-center items-center py-20">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-slate-600"></div>
             </div>
-            <div class="active-keywords" id="activeKeywords"></div>
-            <div class="tracker-hint">* 网页端实时筛选。若需后台机器人明日起追踪，请在 GitHub 编辑 keywords.txt 文件</div>
         </div>
+    </main>
 
-        <!-- 8大平台媒体分类 -->
-        <div class="tabs" id="tabContainer">
-            <button class="tab active" data-source="全部">全部</button>
-            <button class="tab" data-source="FT中文网">FT中文网</button>
-            <button class="tab" data-source="BBC">BBC</button>
-            <button class="tab" data-source="华尔街日报">华尔街日报</button>
-            <button class="tab" data-source="纽约时报">纽约时报</button>
-            <button class="tab" data-source="36氪">36氪</button>
-            <button class="tab" data-source="雅虎财经">雅虎财经</button>
-            <button class="tab" data-source="CNBC">CNBC</button>
-            <button class="tab" data-source="人民网">人民网</button>
-        </div>
-        
-        <div class="news-list" id="newsContainer"></div>
-    </div>
-
-    <!-- 自动读取机器人的数据 -->
-    <script src="news_data.js" charset="utf-8"></script>
-
+    <script src="./news_data.js"></script>
     <script>
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        function updateDate() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+        }
 
-        const container = document.getElementById('newsContainer');
-        const tabs = document.querySelectorAll('.tab');
-        const keywordInput = document.getElementById('keywordInput');
-        const addKeywordBtn = document.getElementById('addKeywordBtn');
-        const activeKeywordsContainer = document.getElementById('activeKeywords');
-        let dynamicKeywords = []; 
-
-        window.onload = function() {
+        function renderNews(filter = 'all') {
+            const container = document.getElementById('news-container');
             if (typeof newsData === 'undefined') {
-                container.innerHTML = `<div class="status-box"><p style="color:#7f8c8d;">等待每日新闻数据抓取中...</p></div>`;
-                return;
-            }
-            renderNews();
-        };
-
-        addKeywordBtn.addEventListener('click', () => {
-            const word = keywordInput.value.trim();
-            if (word && !dynamicKeywords.includes(word)) {
-                dynamicKeywords.push(word);
-                updateKeywordUI();
-                renderNews();
-            }
-            keywordInput.value = '';
-        });
-        keywordInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') addKeywordBtn.click(); });
-
-        function updateKeywordUI() {
-            activeKeywordsContainer.innerHTML = '';
-            dynamicKeywords.forEach((word, index) => {
-                const tag = document.createElement('div');
-                tag.className = 'user-tag';
-                tag.innerHTML = `${word} <span onclick="removeKeyword(${index})">×</span>`;
-                activeKeywordsContainer.appendChild(tag);
-            });
-        }
-
-        window.removeKeyword = function(index) {
-            dynamicKeywords.splice(index, 1);
-            updateKeywordUI();
-            renderNews();
-        };
-
-        function renderNews() {
-            if (typeof newsData === 'undefined') return;
-            const activeTab = document.querySelector('.tab.active');
-            const filterSource = activeTab ? activeTab.getAttribute('data-source') : '全部';
-            container.innerHTML = ''; 
-            
-            let displayData = JSON.parse(JSON.stringify(newsData));
-            
-            if (dynamicKeywords.length > 0) {
-                displayData.forEach(news => {
-                    const contentToSearch = (news.title + " " + news.summary).toLowerCase();
-                    const matchedWord = dynamicKeywords.find(word => contentToSearch.includes(word.toLowerCase()));
-                    if (matchedWord) {
-                        news.isImportant = true; 
-                        news.keyword = matchedWord; 
-                    }
-                });
-            }
-
-            // 按平台媒体筛选
-            let filteredData = filterSource === '全部' ? displayData : displayData.filter(n => n.source.includes(filterSource));
-            
-            // 重要新闻置顶
-            filteredData.sort((a, b) => (b.isImportant === true ? 1 : 0) - (a.isImportant === true ? 1 : 0));
-
-            if (filteredData.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#7f8c8d; margin-top:50px;">该平台暂无新闻。</p>';
+                container.innerHTML = '<div class="text-center py-20 text-slate-400">数据加载中，请稍后刷新...</div>';
                 return;
             }
 
-            // 统计每个平台出现的新闻数量，前3条打上“热”标签
-            let sourceCount = {};
+            let filtered = filter === 'all' ? newsData : newsData.filter(item => item.source === filter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-20 text-slate-400">该平台暂无今日更新。</div>';
+                return;
+            }
 
-            filteredData.forEach(news => {
-                const card = document.createElement('a');
-                // 注释掉链接，变为纯阅读模式（如果你想要恢复跳转，去掉前面的 // 即可）
-                card.href = news.url; card.target = "_blank";
-                
-                card.className = news.isImportant ? "card important" : "card";
-                
-                // 计算该篇新闻是所在平台的第几篇
-                if (!sourceCount[news.source]) sourceCount[news.source] = 0;
-                sourceCount[news.source]++;
-                
-                const isHot = sourceCount[news.source] <= 3;
-                const hotHtml = isHot ? `<span class="hot-badge">🔥 热</span>` : '';
-                const keywordHtml = news.isImportant ? `<span class="keyword-badge">🎯 关注: ${news.keyword}</span>` : '';
-
-                card.innerHTML = `
-                    <div class="card-header">
-                        <span class="source">${news.source}</span>
-                        <div class="tags">
-                            ${hotHtml}
-                            ${keywordHtml}
-                            <span class="tag">${news.region}</span>
-                            <span class="tag">${news.type}</span>
-                        </div>
+            container.innerHTML = filtered.map((item, index) => `
+                <div class="news-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative">
+                    ${index < 3 && filter !== 'all' ? '<span class="hot-badge absolute -top-2 -left-2 text-[10px] text-white px-2 py-0.5 rounded-lg font-bold shadow-sm">TOP热点</span>' : ''}
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">${item.source}</span>
+                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-md">${item.time || '今日'}</span>
                     </div>
-                    <h2 class="title">${news.title}</h2>
-                    <p class="summary">${news.summary}</p>
-                `;
-                container.appendChild(card);
-            });
+                    <h2 class="text-xl font-bold text-slate-800 mb-4 leading-snug">${item.title}</h2>
+                    <div class="bg-slate-50 rounded-xl p-4 border-l-2 border-slate-200">
+                        <p class="text-slate-600 text-[15px] summary-text leading-relaxed">
+                            <span class="font-bold text-slate-400 mr-1 text-xs italic">深度总结:</span>
+                            ${item.summary}
+                        </p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // 分类 Tab 切换交互
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active')); 
-                tab.classList.add('active'); 
-                renderNews(); 
+        function filterNews(source) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active-tab', btn.innerText === (source === 'all' ? '全部' : source));
             });
-        });
+            renderNews(source);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        updateDate();
+        setTimeout(() => renderNews('all'), 500);
     </script>
 </body>
 </html>
