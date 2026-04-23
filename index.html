@@ -1,170 +1,166 @@
-<meta name="apple-mobile-web-app-title" content="政经简报">
-<link rel="apple-touch-icon" href="./logo.png">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>今日政经简报</title>
+    
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="政经简报">
+    <link rel="apple-touch-icon" href="./logo.png">
 
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <!-- 严格恢复昨天的 Tailwind 框架，保证排版不走样 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     
-<style>
-        @import url('[https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600&display=swap)');
-        body { font-family: 'Inter', 'Noto Serif SC', serif; -webkit-tap-highlight-color: transparent; }
-        .news-card { transition: all 0.3s ease; border-left: 4px solid transparent; }
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600&display=swap');
-        body { font-family: 'Inter', 'Noto Serif SC', serif; -webkit-tap-highlight-color: transparent; background-color: #f8fafc; }
+    <style>
+        /* 核心修改 1：全局字体优先替换为无衬线黑体 (微软雅黑, 黑体) */
+        body { 
+            font-family: 'Microsoft YaHei', 'SimHei', 'PingFang SC', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            background-color: #f8fafc; 
+        }
         .news-card { transition: all 0.3s ease; border-left: 4px solid transparent; margin-top: 1.5rem; }
-.news-card:active { transform: scale(0.98); background-color: #f1f5f9; }
-        .active-tab { background-color: #334155 !important; color: white !important; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .hot-badge { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .news-card:active { transform: scale(0.98); filter: brightness(0.95); }
         .active-tab { background-color: #334155 !important; color: white !important; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .hot-badge { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; transform: scale(0.95); } 100% { opacity: 1; } }
-.summary-text { line-height: 1.8; letter-spacing: 0.02em; text-align: justify; }
-
-        /* 默认隐藏滚动条（适配手机） */
-        /* 滚动条智能适配 */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 电脑端强制显示精美滚动条 */
-@media (min-width: 768px) {
-            .no-scrollbar::-webkit-scrollbar { display: block !important; height: 8px !important; }
-            .no-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-            .no-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        /* 核心修改 2：加深摘要文字颜色，增大行高，缓解长时间阅读的视觉疲劳 */
+        .summary-text { line-height: 1.85; letter-spacing: 0.03em; text-align: justify; color: #334155; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @media (min-width: 768px) {
             .no-scrollbar::-webkit-scrollbar { display: block !important; height: 6px !important; }
             .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
             .no-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-.no-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-            .no-scrollbar { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9; }
-}
-</style>
+            .no-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        }
+    </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-20">
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 py-6 border-b border-slate-200 shadow-sm">
 <body class="min-h-screen pb-20">
     <header class="bg-white bg-opacity-90 backdrop-filter backdrop-blur-md sticky top-0 z-50 py-6 border-b border-gray-200 shadow-sm">
-<div class="max-w-3xl mx-auto px-4 text-center">
-            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">今日政经简报</h1>
-            <p id="current-date" class="text-slate-500 mt-2 font-medium"></p>
-            <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">今日政经简报</h1>
-            <p id="current-date" class="text-gray-500 mt-2 font-medium"></p>
-</div>
-</header>
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <!-- 标题字号从 3xl 放大到 4xl -->
+            <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">今日政经简报</h1>
+            <p id="current-date" class="text-gray-500 mt-2 font-medium text-lg"></p>
+        </div>
+    </header>
 
-<main class="max-w-3xl mx-auto px-4 mt-8">
-        <div class="flex overflow-x-auto space-x-2 pb-4 no-scrollbar mb-8 sticky top-[88px] bg-slate-50/95 backdrop-blur-sm py-2 z-40">
-            <button onclick="filterNews('all')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap active-tab">全部</button>
-            <button onclick="filterNews('FT中文网')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">FT中文网</button>
-            <button onclick="filterNews('BBC')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">BBC</button>
-            <button onclick="filterNews('纽约时报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">纽约时报</button>
-            <button onclick="filterNews('华尔街日报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">华尔街日报</button>
-            <button onclick="filterNews('36氪')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">36氪</button>
-            <button onclick="filterNews('雅虎财经')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">雅虎财经</button>
-            <button onclick="filterNews('CNBC')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">CNBC</button>
-            <button onclick="filterNews('联合早报')" class="tab-btn px-5 py-2.5 rounded-full bg-white text-slate-600 font-semibold text-sm shadow-sm border border-slate-200 whitespace-nowrap">联合早报</button>
+    <main class="max-w-3xl mx-auto px-4 mt-8">
+        <!-- 导航栏：更新为人民日报，并适当增大字号 -->
         <div class="flex overflow-x-auto space-x-2 pb-4 no-scrollbar mb-6 sticky top-24 bg-gray-50 py-2 z-40" style="top: 88px;">
-            <button onclick="filterNews('all')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap active-tab">全部</button>
-            <button onclick="filterNews('FT中文网')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">FT中文网</button>
-            <button onclick="filterNews('BBC')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">BBC</button>
-            <button onclick="filterNews('纽约时报')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">纽约时报</button>
-            <button onclick="filterNews('华尔街日报')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">华尔街日报</button>
-            <button onclick="filterNews('36氪')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">36氪</button>
-            <button onclick="filterNews('雅虎财经')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">雅虎财经</button>
-            <button onclick="filterNews('CNBC')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">CNBC</button>
-            <button onclick="filterNews('联合早报')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm border border-gray-200 whitespace-nowrap">联合早报</button>
-</div>
+            <button onclick="filterNews('all')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap active-tab">全部</button>
+            <button onclick="filterNews('FT中文网')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">FT中文网</button>
+            <button onclick="filterNews('BBC')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">BBC</button>
+            <button onclick="filterNews('纽约时报')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">纽约时报</button>
+            <button onclick="filterNews('华尔街日报')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">华尔街日报</button>
+            <button onclick="filterNews('36氪')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">36氪</button>
+            <button onclick="filterNews('雅虎财经')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">雅虎财经</button>
+            <button onclick="filterNews('CNBC')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">CNBC</button>
+            <button onclick="filterNews('人民日报')" class="tab-btn px-5 py-2 rounded-full bg-white text-gray-700 font-bold text-base shadow-sm border border-gray-200 whitespace-nowrap">人民日报</button>
+        </div>
 
-<div id="news-container" class="space-y-6">
-            <div class="flex justify-center items-center py-20">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-slate-600"></div>
-            <div class="flex justify-center items-center py-20 text-gray-400">
+        <div id="news-container" class="space-y-6">
+            <div class="flex justify-center items-center py-20 text-gray-400 text-lg">
                 正在加载最新数据，请稍候...
-</div>
-</div>
-</main>
-@@ -75,44 +73,72 @@ <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">今日政经
-function renderNews(filter = 'all') {
-const container = document.getElementById('news-container');
-if (typeof newsData === 'undefined') {
-                container.innerHTML = '<div class="text-center py-20 text-slate-400">正在抓取今日新闻，请稍后刷新...</div>';
-                container.innerHTML = '<div class="text-center py-20 text-gray-400">正在抓取今日新闻，请稍后刷新...</div>';
-return;
-}
+            </div>
+        </div>
+    </main>
 
-let filtered = filter === 'all' ? newsData : newsData.filter(item => item.source === filter);
+    <script src="./news_data.js"></script>
+    <script>
+        function updateDate() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+        }
 
-if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center py-20 text-slate-400">该平台暂无今日更新。</div>';
-                container.innerHTML = '<div class="text-center py-20 text-gray-400">该平台暂无今日更新。</div>';
-return;
-}
+        function renderNews(filter = 'all') {
+            const container = document.getElementById('news-container');
+            if (typeof newsData === 'undefined') {
+                container.innerHTML = '<div class="text-center py-20 text-gray-400 text-lg">正在抓取今日新闻，请稍后刷新...</div>';
+                return;
+            }
 
-            container.innerHTML = filtered.map((item, index) => `
-                <div class="news-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative">
-                    ${index < 3 && filter !== 'all' ? '<span class="hot-badge absolute -top-2 -left-2 text-[10px] text-white px-2 py-0.5 rounded-lg font-bold shadow-sm">TOP热点</span>' : ''}
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">${item.source}</span>
-            // 完美还原带地区、类别、关键词、热点标志的卡片UI
+            let filtered = filter === 'all' ? newsData : newsData.filter(item => item.source === filter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-20 text-gray-400 text-lg">该平台暂无今日更新。</div>';
+                return;
+            }
+
+            // 严格保持昨天的 UI 逻辑，仅增加字号和动态背景色
             container.innerHTML = filtered.map((item, index) => {
-                // 判断是否是重要情报/热点
                 let hotBadge = item.isImportant ? 
-                    `<span class="hot-badge absolute -top-3 -left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">🔥 深度关注</span>` : 
-                    (index < 3 && filter !== 'all' ? `<span class="absolute -top-3 -left-3 bg-yellow-500 text-white text-xs font-bold px-2 py-0.5 rounded-lg shadow-sm">TOP热点</span>` : '');
+                    `<span class="hot-badge absolute -top-3 -left-3 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg">🔥 深度关注</span>` : 
+                    (index < 3 && filter !== 'all' ? `<span class="absolute -top-3 -left-3 bg-yellow-500 text-white text-sm font-bold px-2 py-0.5 rounded-lg shadow-sm">TOP热点</span>` : '');
                 
-                // 判断是否有触发关键词
                 let keywordTag = item.keyword ? 
-                    `<span class="bg-blue-50 text-blue-600 text-xs font-bold px-2 py-1 rounded border border-blue-100">#${item.keyword}</span>` : '';
+                    `<span class="bg-blue-100 text-blue-700 text-sm font-bold px-2 py-1 rounded border border-blue-200">#${item.keyword}</span>` : '';
 
-                // 安全读取区域和类型
                 let regionStr = item.region || "全球";
                 let typeStr = item.type || "资讯";
 
+                // 核心修改 3：按地区应用 Tailwind 的低饱和度背景色和边框
+                let bgColor = "bg-white";
+                let borderColor = "border-gray-100";
+                
+                if (regionStr.includes("中国")) {
+                    bgColor = "bg-red-50"; borderColor = "border-red-100";
+                } else if (regionStr.includes("美国")) {
+                    bgColor = "bg-blue-50"; borderColor = "border-blue-100";
+                } else if (regionStr.includes("欧洲")) {
+                    bgColor = "bg-green-50"; borderColor = "border-green-100";
+                } else {
+                    bgColor = "bg-yellow-50"; borderColor = "border-yellow-100";
+                }
+
                 return `
-                <div class="news-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
+                <div class="news-card ${bgColor} rounded-2xl p-6 md:p-8 shadow-sm border ${borderColor} relative">
                     ${hotBadge}
                     
-                    <div class="flex justify-between items-center mb-3">
+                    <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center space-x-2">
-                            <span class="text-xs font-bold text-gray-700 bg-gray-100 px-2 py-1 rounded uppercase tracking-wider">${item.source}</span>
-                            <span class="text-xs font-semibold text-gray-500 border border-gray-200 px-2 py-1 rounded">${regionStr} · ${typeStr}</span>
+                            <!-- 标签字号从 xs 放大到 sm -->
+                            <span class="text-sm font-bold text-gray-700 bg-white border border-gray-200 px-2 py-1 rounded uppercase tracking-wider">${item.source}</span>
+                            <span class="text-sm font-semibold text-gray-600 bg-white border border-gray-200 px-2 py-1 rounded">${regionStr} · ${typeStr}</span>
                         </div>
                         ${keywordTag}
-                   </div>
-                    <h2 class="text-xl font-bold text-slate-800 mb-4 leading-snug"><a href="${item.link}" target="_blank">${item.title}</a></h2>
-                    <div class="bg-slate-50 rounded-xl p-4 border-l-2 border-slate-200">
-                        <p class="text-slate-600 text-[15px] summary-text leading-relaxed">
-                            <span class="font-bold text-slate-400 mr-1 text-xs italic">深度总结:</span>
+                    </div>
                     
-                    <h2 class="text-xl font-bold text-gray-800 mb-4 leading-snug">
+                    <!-- 标题字号从 xl 放大到 2xl -->
+                    <h2 class="text-2xl font-bold text-gray-900 mb-5 leading-snug">
                         <a href="${item.url}" target="_blank" class="hover:text-blue-600 transition-colors">${item.title}</a>
                     </h2>
                     
-                    <div class="bg-gray-50 rounded-xl p-4 border-l-4 border-gray-300">
-                        <p class="text-gray-600 text-sm md:text-base summary-text text-justify">
-                           ${item.summary}
-                       </p>
-                   </div>
-               </div>
-            `).join('');
+                    <div class="bg-white bg-opacity-60 rounded-xl p-5 border-l-4 border-gray-300">
+                        <!-- 摘要字号放大，增加可读性 -->
+                        <p class="text-base md:text-lg summary-text">
+                            ${item.summary}
+                        </p>
+                    </div>
+                </div>
                 `;
             }).join('');
-}
+        }
 
-function filterNews(source) {
-document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active-tab', btn.innerText === (source === 'all' ? '全部' : source));
+        function filterNews(source) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.innerText === (source === 'all' ? '全部' : source)) {
                     btn.classList.add('active-tab');
                 } else {
                     btn.classList.remove('active-tab');
                 }
-});
-renderNews(source);
-window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+            });
+            renderNews(source);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-updateDate();
-        setTimeout(() => renderNews('all'), 500);
+        updateDate();
         setTimeout(() => renderNews('all'), 300);
-</script>
+    </script>
 </body>
 </html>
