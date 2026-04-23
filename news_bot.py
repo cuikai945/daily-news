@@ -5,14 +5,14 @@ import time
 import httpx
 from zhipuai import ZhipuAI
 
-# 🌟 1. 从云端“保险箱”（环境变量）安全读取 API Key
+# 1. 从云端“保险箱”（环境变量）安全读取 API Key
 ZHIPU_API_KEY = os.environ.get("ZHIPU_API_KEY")
 if not ZHIPU_API_KEY:
     print("🚨 致命错误: 未获取到 ZHIPU_API_KEY！请检查 GitHub Secrets 是否配置正确。")
     exit(1)
 client = ZhipuAI(api_key=ZHIPU_API_KEY)
 
-# 🌟 2. 读取关键词备忘录
+# 2. 读取关键词备忘录
 watch_keywords = ""
 keyword_file = "keywords.txt"
 if os.path.exists(keyword_file):
@@ -22,7 +22,7 @@ if os.path.exists(keyword_file):
 else:
     print("📖 未发现 keywords.txt，当前无特别关注关键词。")
 
-# 🌟 3. 融合中外 8 大顶尖权威新闻源 (替换联合早报为人民日报)
+# 3. 融合中外 8 大顶尖权威新闻源 (联合早报已替换为人民日报)
 rss_urls = [
     {"source": "FT中文网", "url": "http://www.ftchinese.com/rss/news"},
     {"source": "BBC", "url": "http://feeds.bbci.co.uk/news/world/rss.xml"},
@@ -48,7 +48,6 @@ headers = {
 for feed_info in rss_urls:
     print(f"\n📡 正在前往 {feed_info['source']} 抓取新闻...")
     try:
-        # 使用 httpx 进行带面具的强力穿透
         response = httpx.get(feed_info['url'], headers=headers, timeout=20.0, follow_redirects=True)
         if response.status_code != 200:
             print(f"  [失败] 服务器拒绝访问，状态码: {response.status_code}")
@@ -72,27 +71,10 @@ for feed_info in rss_urls:
         
         keyword_instruction = ""
         if watch_keywords:
-            keyword_instruction = f"""
-            非常重要：用户当前特别关注以下关键词：【{watch_keywords}】。
-            如果这篇新闻的内容与上述任何一个关键词高度相关，请务必将 isImportant 设为 true，并在 keyword 字段填入命中的关键词（如果没有命中，isImportant 设为 false，keyword 留空）。
-            """
+            keyword_instruction = f"非常重要：用户当前特别关注以下关键词：【{watch_keywords}】。如果这篇新闻的内容与上述任何一个关键词高度相关，请务必将 isImportant 设为 true，并在 keyword 字段填入命中的关键词（如果没有命中，isImportant 设为 false，keyword 留空）。"
 
-        # 强制要求 300-500 字深度总结
-        prompt_text = f"""
-        你是一个专业的新闻主编和高级情报分析师。请深度阅读以下新闻情报：
-        标题: {title}
-        摘要: {raw_summary}
-        
-        请完成以下任务：
-        1. 如果是外文，请精准翻译成流畅的中文。
-        2. 用 300-500 字极其详细地总结这篇新闻的核心事件、背景细节和深远影响（客观冷静）。请保证信息量极高，让读者完全无需阅读原文即可掌握所有重要细节。
-        3. 判断所属地区 (仅限：中国、美国、欧洲、全球、其他)。
-        4. 判断所属种类 (仅限：政治、宏观、财经、科技、政策)。
-        {keyword_instruction}
-        
-        请严格以下面的 JSON 格式返回，不要有 Markdown 符号：
-        {{"summary": "详细深度总结", "region": "地区", "type": "种类", "isImportant": false, "keyword": ""}}
-        """
+        # 彻底解决你报错的修复点：使用纯单行字符串加 \n 换行，绝对避免复制粘贴引起的 SyntaxError 报错
+        prompt_text = f"你是一个专业的新闻主编和高级情报分析师。请深度阅读以下新闻情报：\n标题: {title}\n摘要: {raw_summary}\n\n请完成以下任务：\n1. 如果是外文，请精准翻译成流畅的中文。\n2. 用 300-500 字极其详细地总结这篇新闻的核心事件、背景细节和深远影响（客观冷静）。\n3. 判断所属地区 (仅限：中国、美国、欧洲、全球、其他)。\n4. 判断所属种类 (仅限：政治、宏观、财经、科技、政策)。\n{keyword_instruction}\n\n请严格以下面的 JSON 格式返回，不要有 Markdown 符号：\n{{\"summary\": \"详细深度总结\", \"region\": \"地区\", \"type\": \"种类\", \"isImportant\": false, \"keyword\": \"\"}}"
 
         retry_count = 0
         while retry_count < 3:
@@ -104,4 +86,43 @@ for feed_info in rss_urls:
                 )
                 
                 ai_result_text = response.choices[0].message.content.strip()
-                if ai_result_text.startswith("
+                
+                # 安全清理所有的多余符号
+                ai_result_text = ai_result_text.replace("```json", "").replace("```", "").strip()
+                    
+                ai_data = json.loads(ai_result_text)
+                
+                news_item = {
+                    "id": news_id,
+                    "title": title,
+                    "summary": "💡 深度简报：" + ai_data.get("summary", "总结失败"),
+                    "source": feed_info['source'],
+                    "region": ai_data.get("region", "全球"),
+                    "type": ai_data.get("type", "宏观"),
+                    "url": link,
+                    "isImportant": ai_data.get("isImportant", False), 
+                    "keyword": ai_data.get("keyword", "")
+                }
+                final_news_data.append(news_item)
+                news_id += 1
+                success_count += 1
+                print(f"  [完成] 成功提炼 (当前进度: {success_count}/10)")
+                time.sleep(3) # 核心：强制休息防止被封锁
+                break 
+                
+            except Exception as e:
+                retry_count += 1
+                print(f"  [警告] 第 {retry_count} 次尝试失败，正在重试...")
+                time.sleep(2)
+        
+        if retry_count == 3:
+            print("  [放弃] 连续 3 次连接失败，跳过此条新闻。")
+
+print("\n================================================================")
+print("🎉 所有新闻深度提炼完毕！正在生成数据文件...")
+
+js_content = "const newsData = " + json.dumps(final_news_data, ensure_ascii=False, indent=4) + ";"
+with open("news_data.js", "w", encoding="utf-8") as f:
+    f.write(js_content)
+
+print("✅ 大功告成！数据已成功保存。")
